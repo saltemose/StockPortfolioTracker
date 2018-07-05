@@ -34,7 +34,7 @@ class UsersController < ApplicationController
 
    get '/signup' do
      if logged_in?
-       redirect :'/tweets/tweets'
+       redirect :'/users'
      else
        erb :'/users/create_user'
      end
@@ -43,18 +43,15 @@ class UsersController < ApplicationController
    post '/signup' do
 
      if params[:username].empty? || params[:email].empty? || params[:password].empty?
-       flash[:message] = "All fields are required to sign up.  Please try again."
        redirect :'/signup'
      elsif User.find_by(username: params[:username])
-       flash[:message] = "Username already taken.  Please try another username."
        redirect :"/signup"
      elsif User.find_by(email: params[:email])
-       flash[:message] = "An account already exists with this email.  Please use another email."
        redirect :'/signup'
      else
        @user = User.create(params)
        session[:user_id] = @user.id
-       redirect :'/tweets'
+       redirect :'/users'
      end
    end
 
@@ -65,15 +62,6 @@ class UsersController < ApplicationController
        redirect :'/login'
      else
        redirect :'/'
-     end
-   end
-
-   get '/users/:slug' do
-     @user = User.find_by_slug(params[:slug])
-     if @user
-       erb :'/users/show'
-     else
-       erb :'not_found'
      end
    end
 
