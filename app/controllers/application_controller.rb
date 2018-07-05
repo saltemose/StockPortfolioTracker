@@ -1,12 +1,28 @@
 class ApplicationController < Sinatra::Base
+  require './config/environment'
+  require 'rack-flash'
 
-  set :views, Proc.new { File.join(root, "../views/") }
-  register Sinatra::Twitter::Bootstrap::Assets
+  class ApplicationController < Sinatra::Base
 
-  enable :sessions
-  set :seesion_secret, "secret"
+    configure do
+      set :public_folder, 'public'
+      set :views, 'app/views'
 
-  get '/' do
-    erb :index
+      enable :sessions
+      use Rack::Flash
+      set :session_secret, "password_security"
+    end
+
+    def current_user
+      User.find_by(password_digest: session[:user_id])
+    end
+    def logged_in?
+      # puts session.to_json
+      session.key?(:user_id)
+    end
+
+    get '/' do
+      erb :index
+    end
+
   end
-end
