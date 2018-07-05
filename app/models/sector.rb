@@ -1,4 +1,4 @@
 class Sector < ActiveRecord::Base
   has_many :stocks
-  has_manuy :users 
+  has_many :users 
 end
